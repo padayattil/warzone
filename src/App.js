@@ -9,12 +9,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Route exact path='/' render={() => (
-            <HomePage />
+        <Route exact path='/' render={(props) => (
+            <HomePage {...props} />
           )}
         />
-        <Route exact path='/play' render={() => (
-            <GamePage />
+        <Route exact path='/game/:screen' render={(props) => (
+            <GamePage {...props} />
           )}
         />
       </div>

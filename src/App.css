@@ -3,12 +3,15 @@
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
+  width: 60vmin;
+  animation: App-logo-vibrate infinite 0.05s linear;
+  animation-direction: alternate;
 }
 
 .App-header {
-  background-color: #282c34;
+  /* background-color: #282c34; */
+  background-image: url('./images/world-map.jpg');
+  box-shadow: 0 0 70vh 30vh rgba(0,0,0,0.9) inset;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -18,15 +21,21 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.App-header h3 {
+  font-family: monospace;
 }
 
-@keyframes App-logo-spin {
+@media screen and (max-width: 768px) {
+  .App-header {
+    box-shadow: 0 0 70vh 30vw rgba(0,0,0,0.9) inset;
+  }
+}
+
+@keyframes App-logo-vibrate {
   from {
-    transform: rotate(0deg);
+    transform: rotate(2deg);
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(-2deg);
   }
 }

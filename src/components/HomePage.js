@@ -7,14 +7,14 @@ import logo from '../images/logo.png';
 
 function HomePage(props) {
   return (
-    <header className="App-header">
+    <header id="HomePage">
       <img src={logo} className="App-logo" alt="logo" />
       <h3 className="m-4">
         <strong>
           Valor grows by daring, fear by holding back
         </strong>
       </h3>
-      <Link className="btn btn-warning" to="/play">Play Now</Link>
+      <Link className="btn btn-warning px-5" to="/game/tutorial">Play Game</Link>
     </header>
   );
 }

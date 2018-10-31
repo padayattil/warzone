@@ -2,14 +2,13 @@
   text-align: center;
 }
 
-.App-logo {
+#HomePage .App-logo {
   width: 60vmin;
   animation: App-logo-vibrate infinite 0.05s linear;
   animation-direction: alternate;
 }
 
-.App-header {
-  /* background-color: #282c34; */
+#HomePage, #GamePage {
   background-image: url('./images/world-map.jpg');
   box-shadow: 0 0 70vh 30vh rgba(0,0,0,0.9) inset;
   min-height: 100vh;
@@ -21,12 +20,12 @@
   color: white;
 }
 
-.App-header h3 {
+#HomePage h3 {
   font-family: monospace;
 }
 
 @media screen and (max-width: 768px) {
-  .App-header {
+  #HomePage {
     box-shadow: 0 0 70vh 30vw rgba(0,0,0,0.9) inset;
   }
 }
@@ -38,4 +37,26 @@
   to {
     transform: rotate(-2deg);
   }
+}
+
+#Tutorial {
+  margin: 0 10em 0 10em;
+  background-color: #282c34;
+  font-size: 0.6em;
+  text-align: left;
+  border-radius: 20px;
+}
+
+#Tutorial .weapons-list {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#Tutorial .weapons-list {
+  height: 100px;
+}
+
+#Tutorial .weapons-list .weapon-item img {
+  width: 50px;
 }

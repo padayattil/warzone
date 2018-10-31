@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function GamePage(props) {
-  return (
-    <header className="App-header">
-      <h3 className="m-4">
-        <strong>
-          Game
-        </strong>
-      </h3>
-    </header>
-  );
+import Tutorial from './Tutorial';
+import Game from './Game';
+
+class GamePage extends Component {
+  render() {
+    switch (this.props.match.params.screen) {
+      case 'play':
+      return (
+        <div id="GamePage">
+          <Game />
+        </div>
+      );
+      default:
+      return (
+        <div id="GamePage">
+          <Tutorial />
+        </div>
+      );
+    }
+  }
 }
 
 export default GamePage;

@@ -6,7 +6,9 @@ function GameMap(props) {
       {props.mapData.map((row, rowIndex) => (
         <div key={rowIndex} className="map-row d-flex">
           {row.map((cell, cellIndex) => (
-            <div key={cellIndex} className="map-cell"></div>
+            <div key={cellIndex} className="map-cell">
+              <div className={`${cell.cellItemClass}`}></div>
+            </div>
           ))}
         </div>
       ))}

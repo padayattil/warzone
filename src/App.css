@@ -136,3 +136,19 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+
+.army {
+  width: 100%;
+  height: 100%;
+  background-size:  contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.army-red {
+  background-image: url('./images/soldier-red.png');
+}
+
+.army-green {
+  background-image: url('./images/soldier-green.png');
+}

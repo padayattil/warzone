@@ -69,6 +69,7 @@
 
 .PlayerStats{
   background-color: #707070;
+  width: 8em;
 }
 
 #GameMap {
@@ -81,8 +82,8 @@
 }
 
 .map-cell {
-  width: 60px;
-  height: 60px;
+  width: 2em;
+  height: 2em;
   border: 0;
   border-right: 2px;
   border-bottom: 2px;

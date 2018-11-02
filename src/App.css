@@ -154,6 +154,11 @@
   background-image: url('./images/soldier-blue.png');
 }
 
+.PlayerStats .army {
+  width: 2em;
+  height: 2em;
+}
+
 .current-army-cell {
   box-shadow: 0 0 5px 2px white inset;
 }
@@ -163,9 +168,9 @@
 }
 
 .army-accessible-cell {
-  box-shadow: 0 0 5px 1px green inset;
+  box-shadow: 0 0 5px 1px #32CD32 inset;
 }
 
 .army-accessible-cell:hover {
-  box-shadow: 0 0 5px 4px green inset;
+  box-shadow: 0 0 5px 4px #32CD32 inset;
 }

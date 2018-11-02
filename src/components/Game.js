@@ -24,7 +24,8 @@ class Game extends Component {
       if (armyPositions.hasOwnProperty(position)) {
         if(armyPositions[position] === 'yellowArmy') {
           yellowArmy = {
-            name: 'Yello Army',
+            name: 'Yellow Army',
+            iconClass: 'army army-yellow',
             life: 100,
             weapon: 'knife',
             rowIndex: parseInt(armyPosition[0]),
@@ -34,6 +35,7 @@ class Game extends Component {
         if(armyPositions[position] === 'yellowArmy') {
           blueArmy = {
             name: 'Blue Army',
+            iconClass: 'army army-blue',
             life: 100,
             weapon: 'knife',
             rowIndex: parseInt(armyPosition[0]),
@@ -100,13 +102,13 @@ class Game extends Component {
     if(this.state.mapData !== null) {
       return (
         <div id="Game" className="d-flex">
-          <PlayerStats  stats={this.state.yellowArmy} />
+          <PlayerStats  army={{...this.state.blueArmy}} />
           <GameMap
-            mapData={this.state.mapData}
+            mapData={{...this.state.mapData}}
             mapSize={this.MAP_SIZE}
             maxWalkDistance={this.MAX_WALK_DISTANCE}
             currentArmy={this.state[this.state.turn]} />
-          <PlayerStats  stats={this.state.blueArmy} />
+          <PlayerStats  army={{...this.state.yellowArmy}} />
         </div>
       );
     }

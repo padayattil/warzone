@@ -13,28 +13,48 @@ class GameMap extends Component {
       return 'grenade';
     if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'tank')
       return 'tank';
-    if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'redArmy')
-      return 'army army-red';
-    if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'greenArmy')
-      return 'army army-green';
+    if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'yellowArmy')
+      return 'army army-yellow';
+    if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'blueArmy')
+      return 'army army-blue';
   }
 
   getArmyAccessibility(rowIndex, colIndex) {
+    // compute distance
     let diff;
-    if(this.props.currentArmy.rowIndex === rowIndex) {
-      diff = Math.abs(this.props.currentArmy.colIndex - colIndex)
-    } else if(this.props.currentArmy.colIndex === colIndex) {
-      diff = Math.abs(this.props.currentArmy.rowIndex - rowIndex)
-    } else {
+    if(this.props.currentArmy.rowIndex === rowIndex)
+      diff = this.props.currentArmy.colIndex - colIndex
+    else if(this.props.currentArmy.colIndex === colIndex)
+      diff = this.props.currentArmy.rowIndex - rowIndex
+    else
       diff = 9999;
+
+    // check if within range. return 'inaccessible' if occupied
+    if(Math.abs(diff) === 0)
+      return 'current-army-cell';
+    if (['rocks', 'yellowArmy', 'blueArmy'].includes(this.props.mapData[`${rowIndex}_${colIndex}`]))
+      return 'army-inaccessible-cell';
+    if(Math.abs(diff) > this.props.maxWalkDistance)
+      return 'army-inaccessible-cell';
+
+    // check line of sight within row
+    let walk_step = diff === Math.abs(diff) ? -1 : 1;
+    if(this.props.currentArmy.rowIndex === rowIndex) {
+      for(let i=this.props.currentArmy.colIndex+walk_step; i !== colIndex; i += walk_step) {
+        if(['rocks','yellowArmy','blueArmy'].includes(this.props.mapData[`${rowIndex}_${i}`])) {
+          return 'army-inaccessible-cell';
+        }
+      }
     }
-    if(diff === 0)
-      return '';
-    if (typeof this.props.mapData[`${rowIndex}_${colIndex}`] !== 'undefined')
-      return 'army-inaccessible';
-    if(diff > 3)
-      return 'army-inaccessible';
-    return 'army-accessible';
+    // check line of sight within column
+    if(this.props.currentArmy.colIndex === colIndex) {
+      for(let i=this.props.currentArmy.rowIndex+walk_step; i !== rowIndex; i += walk_step) {
+        if(['rocks','yellowArmy','blueArmy'].includes(this.props.mapData[`${i}_${colIndex}`])) {
+          return 'army-inaccessible-cell';
+        }
+      }
+    }
+    return  'army-accessible-cell';
   }
 
   render() {

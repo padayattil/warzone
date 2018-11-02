@@ -14,75 +14,84 @@ class Game extends Component {
   }
 
   getInitialState() {
-    return {
-      mapData: this.generateMapData(),
-      redArmy: {
-        name: 'Red Army',
-        life: 100,
-        weapon: 'knife'
-      },
-      greenArmy: {
-        name: 'Green Army',
-        life: 100,
-        weapon: 'knife'
+    const rockPositions = this.placeRocksOnMap();
+    const weaponPositions = this.placeWeaponsOnMap({...rockPositions});
+    const armyPositions = this.placeArmyOnMap({...rockPositions, ...weaponPositions});
+    let redArmy, greenArmy, armyPosition;
+    for(const position in armyPositions) {
+      armyPosition = position.split('_')
+      if (armyPositions.hasOwnProperty(position)) {
+        if(armyPositions[position] === 'redArmy') {
+          redArmy = {
+            name: 'Red Army',
+            life: 100,
+            weapon: 'knife',
+            rowIndex: parseInt(armyPosition[0]),
+            colIndex: parseInt(armyPosition[1])
+          }
+        }
+        if(armyPositions[position] === 'redArmy') {
+          greenArmy = {
+            name: 'Green Army',
+            life: 100,
+            weapon: 'knife',
+            rowIndex: parseInt(armyPosition[0]),
+            colIndex: parseInt(armyPosition[1])
+          }
+        }
       }
     }
+    return ({
+      mapData: {...rockPositions, ...weaponPositions, ...armyPositions},
+      turn: ['redArmy', 'greenArmy'][getRandomIntInclusive(0,1)],
+      redArmy,
+      greenArmy
+    })
   }
 
-  placeMapRocks(mapData) {
-    for (let i = 0; i < this.MAP_SIZE; i++) {
-      var row = []
-      for (let j = 0; j < this.MAP_SIZE; j++) {
-        row.push({
-          position: `${i}_${j}`,
-          cellItemClass: (Math.random() < this.ROCKS_PROBABILITY) ? 'rocks' : ''
-        });
-      }
-      mapData.push(row);
-    }
-    return mapData;
-  }
-
-  getMapEmptyPosition(mapData) {
+  getEmptyMapPosition(mapData) {
     let cellRow, cellColumn;
-    while(true) {
+    do {
       cellRow = getRandomIntInclusive(0, this.MAP_SIZE-1)
       cellColumn = getRandomIntInclusive(0, this.MAP_SIZE-1)
-      if(mapData[cellRow][cellColumn].cellItemClass !== '')
-        return {cellRow, cellColumn};
+    } while(typeof mapData[`${cellRow}_${cellColumn}`] !== 'undefined');
+    return {cellRow, cellColumn};
+  }
+
+  placeRocksOnMap() {
+    const rockPositions = {};
+    for (let i = 0; i < this.MAP_SIZE; i++) {
+      for (let j = 0; j < this.MAP_SIZE; j++) {
+        if(Math.random() < this.ROCKS_PROBABILITY)
+          rockPositions[`${i}_${j}`] =  'rocks';
+      }
     }
+    return rockPositions;
+  }
+
+  placeWeaponsOnMap(mapData) {
+    let remainingWeapons = getRandomIntInclusive(2,4);
+    let emptyPosition;
+    do {
+      emptyPosition = this.getEmptyMapPosition(mapData);
+      mapData[`${emptyPosition.cellRow}_${emptyPosition.cellColumn}`] = ['knife', 'gun', 'grenade', 'tank'][getRandomIntInclusive(0, 3)];
+      remainingWeapons -= 1;
+    } while(remainingWeapons !== 0);
+    return mapData;
   }
 
   isAdjacentPositions(pos1, pos2) {
     return (Math.abs(pos1.cellRow-pos2.cellRow)+Math.abs(pos1.cellColumn-pos2.cellColumn)) < 2;
   }
 
-  placeMapWeapons(mapData) {
-    let remainingWeapons = getRandomIntInclusive(2,4);
-    let emptyPosition;
-    do {
-      emptyPosition = this.getMapEmptyPosition(mapData);
-      mapData[emptyPosition.cellRow][emptyPosition.cellColumn]
-        .cellItemClass = ['knife', 'gun', 'grenade', 'tank'][getRandomIntInclusive(0, 3)];
-      remainingWeapons -= 1;
-    } while(remainingWeapons !== 0);
-  }
-
-  placeMapArmy(mapData) {
-    let redArmyPosition = this.getMapEmptyPosition(mapData);
+  placeArmyOnMap(mapData) {
+    let redArmyPosition = this.getEmptyMapPosition(mapData);
     let greenArmyPosition;
     do {
-      greenArmyPosition = this.getMapEmptyPosition(mapData);
+      greenArmyPosition = this.getEmptyMapPosition(mapData);
     } while(this.isAdjacentPositions(redArmyPosition, greenArmyPosition));
-    console.log(redArmyPosition, greenArmyPosition);
-    mapData[redArmyPosition.cellRow][redArmyPosition.cellColumn].cellItemClass = 'army army-red';
-    mapData[greenArmyPosition.cellRow][greenArmyPosition.cellColumn].cellItemClass = 'army army-green';
-  }
-
-  generateMapData() {
-    const mapData = this.placeMapRocks([]);
-    this.placeMapWeapons(mapData);
-    this.placeMapArmy(mapData);
+    mapData[`${redArmyPosition.cellRow}_${redArmyPosition.cellColumn}`] = 'redArmy';
+    mapData[`${greenArmyPosition.cellRow}_${greenArmyPosition.cellColumn}`] = 'greenArmy';
     return mapData;
   }
 
@@ -91,7 +100,10 @@ class Game extends Component {
       return (
         <div id="Game" className="d-flex">
           <PlayerStats  stats={this.state.redArmy} />
-          <GameMap mapData={this.state.mapData} />
+          <GameMap
+            mapData={this.state.mapData}
+            mapSize={this.MAP_SIZE}
+            currentArmy={this.state[this.state.turn]} />
           <PlayerStats  stats={this.state.greenArmy} />
         </div>
       );

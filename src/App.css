@@ -146,22 +146,26 @@
   background-position: center;
 }
 
-.army-red {
-  background-image: url('./images/soldier-red.png');
+.army-yellow {
+  background-image: url('./images/soldier-yellow.png');
 }
 
-.army-green {
-  background-image: url('./images/soldier-green.png');
+.army-blue {
+  background-image: url('./images/soldier-blue.png');
 }
 
-.army-inaccessible:hover {
+.current-army-cell {
+  box-shadow: 0 0 5px 2px white inset;
+}
+
+.army-inaccessible-cell:hover {
   box-shadow: 0 0 5px 0.5px red inset;
 }
 
-.army-accessible {
+.army-accessible-cell {
   box-shadow: 0 0 5px 1px green inset;
 }
 
-.army-accessible:hover {
+.army-accessible-cell:hover {
   box-shadow: 0 0 5px 4px green inset;
 }

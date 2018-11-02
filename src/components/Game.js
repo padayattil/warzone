@@ -7,6 +7,7 @@ import { getRandomIntInclusive } from '../utils';
 class Game extends Component {
   MAP_SIZE = 10;
   ROCKS_PROBABILITY = 0.2;
+  MAX_WALK_DISTANCE = 3;
 
   constructor(props) {
     super(props);
@@ -17,22 +18,22 @@ class Game extends Component {
     const rockPositions = this.placeRocksOnMap();
     const weaponPositions = this.placeWeaponsOnMap({...rockPositions});
     const armyPositions = this.placeArmyOnMap({...rockPositions, ...weaponPositions});
-    let redArmy, greenArmy, armyPosition;
+    let yellowArmy, blueArmy, armyPosition;
     for(const position in armyPositions) {
       armyPosition = position.split('_')
       if (armyPositions.hasOwnProperty(position)) {
-        if(armyPositions[position] === 'redArmy') {
-          redArmy = {
-            name: 'Red Army',
+        if(armyPositions[position] === 'yellowArmy') {
+          yellowArmy = {
+            name: 'Yello Army',
             life: 100,
             weapon: 'knife',
             rowIndex: parseInt(armyPosition[0]),
             colIndex: parseInt(armyPosition[1])
           }
         }
-        if(armyPositions[position] === 'redArmy') {
-          greenArmy = {
-            name: 'Green Army',
+        if(armyPositions[position] === 'yellowArmy') {
+          blueArmy = {
+            name: 'Blue Army',
             life: 100,
             weapon: 'knife',
             rowIndex: parseInt(armyPosition[0]),
@@ -43,9 +44,9 @@ class Game extends Component {
     }
     return ({
       mapData: {...rockPositions, ...weaponPositions, ...armyPositions},
-      turn: ['redArmy', 'greenArmy'][getRandomIntInclusive(0,1)],
-      redArmy,
-      greenArmy
+      turn: ['yellowArmy', 'blueArmy'][getRandomIntInclusive(0,1)],
+      yellowArmy,
+      blueArmy
     })
   }
 
@@ -85,13 +86,13 @@ class Game extends Component {
   }
 
   placeArmyOnMap(mapData) {
-    let redArmyPosition = this.getEmptyMapPosition(mapData);
-    let greenArmyPosition;
+    let yellowArmyPosition = this.getEmptyMapPosition(mapData);
+    let blueArmyPosition;
     do {
-      greenArmyPosition = this.getEmptyMapPosition(mapData);
-    } while(this.isAdjacentPositions(redArmyPosition, greenArmyPosition));
-    mapData[`${redArmyPosition.cellRow}_${redArmyPosition.cellColumn}`] = 'redArmy';
-    mapData[`${greenArmyPosition.cellRow}_${greenArmyPosition.cellColumn}`] = 'greenArmy';
+      blueArmyPosition = this.getEmptyMapPosition(mapData);
+    } while(this.isAdjacentPositions(yellowArmyPosition, blueArmyPosition));
+    mapData[`${yellowArmyPosition.cellRow}_${yellowArmyPosition.cellColumn}`] = 'yellowArmy';
+    mapData[`${blueArmyPosition.cellRow}_${blueArmyPosition.cellColumn}`] = 'blueArmy';
     return mapData;
   }
 
@@ -99,12 +100,13 @@ class Game extends Component {
     if(this.state.mapData !== null) {
       return (
         <div id="Game" className="d-flex">
-          <PlayerStats  stats={this.state.redArmy} />
+          <PlayerStats  stats={this.state.yellowArmy} />
           <GameMap
             mapData={this.state.mapData}
             mapSize={this.MAP_SIZE}
+            maxWalkDistance={this.MAX_WALK_DISTANCE}
             currentArmy={this.state[this.state.turn]} />
-          <PlayerStats  stats={this.state.greenArmy} />
+          <PlayerStats  stats={this.state.blueArmy} />
         </div>
       );
     }

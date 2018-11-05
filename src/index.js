@@ -1,18 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter, Route } from 'react-router-dom';
+import $ from 'jquery';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'material-icons/iconfont/material-icons.css';
 
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import './images/favicon.png';
+import './images/cell-bg.png';
+import './images/czech-hedgehog.png';
+import './images/grenade.png';
+import './images/gun.png';
+import './images/knife.png';
+import './images/logo.png';
+import './images/rocks.png';
+import './images/soldier-blue.png';
+import './images/soldier-yellow.png';
+import './images/tank.png';
+import './images/trees.png';
+import './images/world-map.jpg';
+import Game from './Game.js';
 
-ReactDOM.render(
-  <BrowserRouter>
-    <Route render={(props) => <App location={props.location} history={props.history} />} />
-  </BrowserRouter>,
-  document.getElementById('root'));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+$(document).ready(function () {
+  const game = new Game();
+  game.render();
+});

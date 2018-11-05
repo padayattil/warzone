@@ -6,11 +6,222 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100vh;
   overflow: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.App {
+  width: 100vw;
+  text-align: center;
+}
+
+#Tutorial p, li.p {
+  margin: 0;
+}
+
+.App-logo {
+  width: 30vmin;
+}
+
+#HomePage .App-logo {
+  width: 60vmin;
+  animation: App-logo-vibrate infinite 0.05s linear;
+  animation-direction: alternate;
+}
+
+.menu-container {
+  width: 10em;
+}
+
+.menu-btn {
+  width: 100%;
+  text-align: center;
+}
+
+#HomePage, #GamePage {
+  height: 100vh;
+  background-image: url('./images/world-map.jpg');
+  box-shadow: 0 0 70vh 30vh rgba(0,0,0,0.9) inset;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+#HomePage h3 {
+  font-family: monospace;
+}
+
+@media screen and (max-width: 768px) {
+  #HomePage {
+    box-shadow: 0 0 70vh 30vw rgba(0,0,0,0.9) inset;
+  }
+}
+
+@keyframes App-logo-vibrate {
+  from {
+    transform: rotate(2deg);
+  }
+  to {
+    transform: rotate(-2deg);
+  }
+}
+
+#Tutorial {
+  margin: 0 10em 0 10em;
+  background-color: #282c34;
+  font-size: 0.6em;
+  text-align: left;
+  border-radius: 20px;
+}
+
+#Tutorial .instruction-gameitem-list {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 10px;
+}
+
+/* #Tutorial .instruction-gameitem-list .instruction-gameitem {
+  margin-left: 4em;
+  margin-right: 4em;
+} */
+
+#Tutorial .instruction-gameitem-list .instruction-gameitem img {
+  width: 20px;
+}
+
+#Game {
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+  padding-bottom: 1em;
+}
+
+.PlayerStats {
+  border-radius: 10px;
+  background-color: #282C34;
+  width: 8em;
+}
+
+.PlayerStats.active {
+  box-shadow: 0 0 5px 2px white;
+}
+
+.PlayerStats > div {
+  margin-bottom: 1em;
+}
+
+#GameMap {
+  border: 0;
+  border: 2px;
+  border-style: solid;
+  border-right-style: hidden;
+  border-bottom-style: hidden;
+  border-color: #4D3D38;
+  align-self: center;
+}
+
+.map-cell {
+  width: 2em;
+  height: 2em;
+  border: 0;
+  border-right: 2px;
+  border-bottom: 2px;
+  border-style: solid;
+  border-color: #4D3D38;
+  background-image: url('./images/cell-bg.png');
+  background-size: cover;
+}
+
+.map-cell-item {
+  width: 100%;
+  height: 100%;
+  background-size:  contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.rocks {
+  background-image: url('./images/rocks.png');
+}
+
+.trees {
+  background-image: url('./images/trees.png');
+}
+
+.czech-hedgehog {
+  background-image: url('./images/czech-hedgehog.png');
+}
+
+.knife {
+  background-image: url('./images/knife.png');
+}
+
+.gun {
+  background-image: url('./images/gun.png');
+}
+
+.grenade {
+  background-image: url('./images/grenade.png');
+}
+
+.tank {
+  background-image: url('./images/tank.png');
+}
+
+.army-yellow {
+  background-image: url('./images/soldier-yellow.png');
+}
+
+.army-blue {
+  background-image: url('./images/soldier-blue.png');
+}
+
+.PlayerStats .army {
+  width: 2em;
+  height: 2em;
+}
+
+.current-army-cell {
+  box-shadow: 0 0 5px 2px white inset;
+}
+
+.army-inaccessible-cell:hover {
+  box-shadow: 0 0 5px 0.5px red inset;
+}
+
+.army-accessible-cell {
+  box-shadow: 0 0 5px 1px #32CD32 inset;
+}
+
+.army-accessible-cell:hover {
+  box-shadow: 0 0 5px 4px #32CD32 inset;
+}
+
+.weapon-gauge {
+  width: 100%;
+  padding: 1em;
+  padding-bottom: 0;
+  background-color: #343A40;
+  border-radius: 10px;
+}
+
+.weapon-gauge-icon {
+  width: 100%;
+  min-height: 2em;
+  background-size:  contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.life-icon {
+  color: red;
 }

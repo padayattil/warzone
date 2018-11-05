@@ -7,15 +7,18 @@ import logo from '../images/logo.png';
 
 function HomePage(props) {
   return (
-    <header id="HomePage">
+    <div id="HomePage">
       <img src={logo} className="App-logo" alt="logo" />
       <h3 className="m-4">
         <strong>
           Valor grows by daring, fear by holding back
         </strong>
       </h3>
-      <Link className="btn btn-warning px-5" to="/game/tutorial">Play Game</Link>
-    </header>
+      <div className="menu-container">
+          <Link to="/game/play" className="my-2 menu-btn btn btn-warning px-5">Play Now</Link>
+          <Link to="/game/tutorial" className="my-2 menu-btn btn btn-warning px-5">Instructions</Link>
+      </div>
+    </div>
   );
 }
 

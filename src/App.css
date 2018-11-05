@@ -1,5 +1,15 @@
 .App {
+  height: 100vh;
+  width: 100vw;
   text-align: center;
+}
+
+#Tutorial p, li.p {
+  margin: 0;
+}
+
+.App-logo {
+  width: 30vmin;
 }
 
 #HomePage .App-logo {
@@ -8,10 +18,20 @@
   animation-direction: alternate;
 }
 
+.menu-container {
+  width: 10em;
+}
+
+.menu-btn {
+  width: 100%;
+  text-align: center;
+}
+
 #HomePage, #GamePage {
   background-image: url('./images/world-map.jpg');
   box-shadow: 0 0 70vh 30vh rgba(0,0,0,0.9) inset;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,18 +67,20 @@
   border-radius: 20px;
 }
 
-#Tutorial .weapons-list {
+#Tutorial .instruction-gameitem-list {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
+  border-radius: 10px;
 }
 
-#Tutorial .weapons-list {
-  height: 100px;
-}
+/* #Tutorial .instruction-gameitem-list .instruction-gameitem {
+  margin-left: 4em;
+  margin-right: 4em;
+} */
 
-#Tutorial .weapons-list .weapon-item img {
-  width: 50px;
+#Tutorial .instruction-gameitem-list .instruction-gameitem img {
+  width: 20px;
 }
 
 #Game {
@@ -93,57 +115,40 @@
   background-size: cover;
 }
 
-.rocks {
+.map-cell-item {
   width: 100%;
   height: 100%;
-  background-image: url('./images/rocks.png');
   background-size:  contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.rocks {
+  background-image: url('./images/rocks.png');
+}
+
+.trees {
+  background-image: url('./images/trees.png');
+}
+
+.czech-hedgehog {
+  background-image: url('./images/czech-hedgehog.png');
 }
 
 .knife {
-  width: 100%;
-  height: 100%;
   background-image: url('./images/knife.png');
-  background-size:  contain;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 .gun {
-  width: 100%;
-  height: 100%;
   background-image: url('./images/gun.png');
-  background-size:  contain;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 .grenade {
-  width: 100%;
-  height: 100%;
   background-image: url('./images/grenade.png');
-  background-size:  contain;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 .tank {
-  width: 100%;
-  height: 100%;
   background-image: url('./images/tank.png');
-  background-size:  contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.army {
-  width: 100%;
-  height: 100%;
-  background-size:  contain;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 .army-yellow {

@@ -15,9 +15,9 @@ class Game extends Component {
   }
 
   getInitialState() {
-    const rockPositions = this.placeRocksOnMap();
-    const weaponPositions = this.placeWeaponsOnMap({...rockPositions});
-    const armyPositions = this.placeArmyOnMap({...rockPositions, ...weaponPositions});
+    const obstaclePositions = this.placeObstaclesOnMap();
+    const weaponPositions = this.placeWeaponsOnMap({...obstaclePositions});
+    const armyPositions = this.placeArmyOnMap({...obstaclePositions, ...weaponPositions});
     let yellowArmy, blueArmy, armyPosition;
     for(const position in armyPositions) {
       armyPosition = position.split('_')
@@ -45,7 +45,7 @@ class Game extends Component {
       }
     }
     return ({
-      mapData: {...rockPositions, ...weaponPositions, ...armyPositions},
+      mapData: {...obstaclePositions, ...weaponPositions, ...armyPositions},
       turn: ['yellowArmy', 'blueArmy'][getRandomIntInclusive(0,1)],
       yellowArmy,
       blueArmy
@@ -61,15 +61,15 @@ class Game extends Component {
     return {cellRow, cellColumn};
   }
 
-  placeRocksOnMap() {
-    const rockPositions = {};
+  placeObstaclesOnMap() {
+    const obstaclePositions = {};
     for (let i = 0; i < this.MAP_SIZE; i++) {
       for (let j = 0; j < this.MAP_SIZE; j++) {
         if(Math.random() < this.ROCKS_PROBABILITY)
-          rockPositions[`${i}_${j}`] =  'rocks';
+          obstaclePositions[`${i}_${j}`] =  ['rocks','trees', 'czech-hedgehog'][getRandomIntInclusive(0,2)];
       }
     }
-    return rockPositions;
+    return obstaclePositions;
   }
 
   placeWeaponsOnMap(mapData) {

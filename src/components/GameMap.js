@@ -5,6 +5,10 @@ class GameMap extends Component {
   getCellItemClasses(rowIndex, colIndex) {
     if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'rocks')
       return 'rocks';
+    if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'trees')
+      return 'trees';
+    if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'czech-hedgehog')
+      return 'czech-hedgehog';
     if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'knife')
       return 'knife';
     if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'gun')
@@ -14,9 +18,9 @@ class GameMap extends Component {
     if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'tank')
       return 'tank';
     if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'yellowArmy')
-      return 'army army-yellow';
+      return 'army-yellow';
     if(this.props.mapData[`${rowIndex}_${colIndex}`] === 'blueArmy')
-      return 'army army-blue';
+      return 'army-blue';
   }
 
   getArmyAccessibility(rowIndex, colIndex) {
@@ -32,7 +36,7 @@ class GameMap extends Component {
     // check if within range. return 'inaccessible' if occupied
     if(Math.abs(diff) === 0)
       return 'current-army-cell';
-    if (['rocks', 'yellowArmy', 'blueArmy'].includes(this.props.mapData[`${rowIndex}_${colIndex}`]))
+    if (['rocks', 'trees', 'czech-hedgehog', 'yellowArmy', 'blueArmy'].includes(this.props.mapData[`${rowIndex}_${colIndex}`]))
       return 'army-inaccessible-cell';
     if(Math.abs(diff) > this.props.maxWalkDistance)
       return 'army-inaccessible-cell';
@@ -41,7 +45,7 @@ class GameMap extends Component {
     let walk_step = diff === Math.abs(diff) ? -1 : 1;
     if(this.props.currentArmy.rowIndex === rowIndex) {
       for(let i=this.props.currentArmy.colIndex+walk_step; i !== colIndex; i += walk_step) {
-        if(['rocks','yellowArmy','blueArmy'].includes(this.props.mapData[`${rowIndex}_${i}`])) {
+        if(['rocks', 'trees', 'czech-hedgehog', 'yellowArmy', 'blueArmy'].includes(this.props.mapData[`${rowIndex}_${i}`])) {
           return 'army-inaccessible-cell';
         }
       }
@@ -49,7 +53,7 @@ class GameMap extends Component {
     // check line of sight within column
     if(this.props.currentArmy.colIndex === colIndex) {
       for(let i=this.props.currentArmy.rowIndex+walk_step; i !== rowIndex; i += walk_step) {
-        if(['rocks','yellowArmy','blueArmy'].includes(this.props.mapData[`${i}_${colIndex}`])) {
+        if(['rocks', 'trees', 'czech-hedgehog', 'yellowArmy', 'blueArmy'].includes(this.props.mapData[`${i}_${colIndex}`])) {
           return 'army-inaccessible-cell';
         }
       }
@@ -64,7 +68,7 @@ class GameMap extends Component {
           <div key={rowIndex} className="map-row d-flex">
             {row.map((col, colIndex) => (
               <div key={colIndex} className={`map-cell ${this.getArmyAccessibility(rowIndex, colIndex)}`}>
-                <div className={this.getCellItemClasses(rowIndex, colIndex)}></div>
+                <div className={`map-cell-item ${this.getCellItemClasses(rowIndex, colIndex)}`}></div>
               </div>
             ))}
           </div>

@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 import { getRandomIntInclusive } from './utils';
-import { MAP_SIZE,ROCKS_PROBABILITY,MAX_WALK_DISTANCE,WEAPONS } from './utils/constants';
+import { MAP_SIZE,OBSTACLE_PROBABILITY,MAX_WALK_DISTANCE,WEAPONS } from './utils/constants';
 
 import GameMap from './GameMap';
 import PlayerStats from './PlayerStats';
@@ -38,7 +38,7 @@ class Game {
             colIndex: parseInt(armyPosition[1])
           }
         }
-        if(armyPositions[position] === 'yellowArmy') {
+        if(armyPositions[position] === 'blueArmy') {
           blueArmy = {
             name: 'Blue Army',
             iconClass: 'army army-blue',
@@ -72,7 +72,7 @@ class Game {
     const obstaclePositions = {};
     for (let i = 0; i < MAP_SIZE; i++) {
       for (let j = 0; j < MAP_SIZE; j++) {
-        if(Math.random() < ROCKS_PROBABILITY)
+        if(Math.random() < OBSTACLE_PROBABILITY)
           obstaclePositions[`${i}_${j}`] =  ['rocks','trees', 'czech-hedgehog'][getRandomIntInclusive(0,2)];
       }
     }
@@ -108,13 +108,13 @@ class Game {
   html() {
     if(this.state.mapData !== null) {
       return (
-        `${this.playerStats.html(this.state.yellowArmy)}
+        `${this.playerStats.html(this.state, this.state.yellowArmy)}
         ${
           this.gameMap.html(
             this.state.mapData,
             this.state[this.state.turn])
         }
-        ${(this.playerStats.html(this.state.blueArmy))}`
+        ${(this.playerStats.html(this.state, this.state.blueArmy))}`
       );
     }
     return (

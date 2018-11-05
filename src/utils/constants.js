@@ -1,5 +1,5 @@
 export const MAP_SIZE = 10;
-export const ROCKS_PROBABILITY = 0.2;
+export const OBSTACLE_PROBABILITY = 0.2;
 export const MAX_WALK_DISTANCE = 3;
 export const WEAPONS = {
   'knife': {

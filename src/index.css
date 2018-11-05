@@ -105,13 +105,17 @@ code {
   padding-bottom: 1em;
 }
 
-.PlayerStats{
+.PlayerStats {
   border-radius: 10px;
   background-color: #282C34;
   width: 8em;
 }
 
-.PlayerStats div {
+.PlayerStats.active {
+  box-shadow: 0 0 5px 2px white;
+}
+
+.PlayerStats > div {
   margin-bottom: 1em;
 }
 
@@ -204,7 +208,8 @@ code {
 
 .weapon-gauge {
   width: 100%;
-  padding: 0 1em 0 1em;
+  padding: 1em;
+  padding-bottom: 0;
   background-color: #343A40;
   border-radius: 10px;
 }

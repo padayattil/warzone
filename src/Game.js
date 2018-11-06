@@ -16,34 +16,47 @@ class Game {
 
   initTriggers() {
     $(document).on('click', '.army-accessible-cell', (e) => {
-      const mapCellKey = $(e.target).data('key');
+      const [rowIndex, colIndex] = $(e.target).data('key').split('_');
+      this.moveArmy({rowIndex, colIndex});
+    });
+
+    $(document).on('click', '.battle-action-defend', (e) => {
+      this.battleActionDefend();
+    });
+
+    $(document).on('click', '.battle-action-attack', (e) => {
+      this.battleActionAttack();
     });
   }
 
   getInitialState() {
     const obstaclePositions = this.placeObstaclesOnMap();
     const weaponPositions = this.placeWeaponsOnMap({...obstaclePositions});
-    const armyPositions = this.placeArmyOnMap({...obstaclePositions, ...weaponPositions});
+    const armyPositions = this.setArmyPositions({...obstaclePositions, ...weaponPositions});
     let yellowArmy, blueArmy, armyPosition;
     for(const position in armyPositions) {
       armyPosition = position.split('_')
       if (armyPositions.hasOwnProperty(position)) {
         if(armyPositions[position] === 'yellowArmy') {
           yellowArmy = {
+            key: 'yellowArmy',
             name: 'Yellow Army',
             iconClass: 'army army-yellow',
             life: 100,
             weapon: 'knife',
+            battleAction: null,
             rowIndex: parseInt(armyPosition[0]),
             colIndex: parseInt(armyPosition[1])
           }
         }
         if(armyPositions[position] === 'blueArmy') {
           blueArmy = {
+            key: 'blueArmy',
             name: 'Blue Army',
             iconClass: 'army army-blue',
             life: 100,
             weapon: 'knife',
+            battleAction: null,
             rowIndex: parseInt(armyPosition[0]),
             colIndex: parseInt(armyPosition[1])
           }
@@ -52,7 +65,7 @@ class Game {
     }
     return ({
       mode: 'patrol',
-      mapData: {...obstaclePositions, ...weaponPositions, ...armyPositions},
+      mapData: {...obstaclePositions, ...weaponPositions},
       turn: ['yellowArmy', 'blueArmy'][getRandomIntInclusive(0,1)],
       yellowArmy,
       blueArmy
@@ -60,12 +73,12 @@ class Game {
   }
 
   getEmptyMapPosition(mapData) {
-    let cellRow, cellColumn;
+    let rowIndex, colIndex;
     do {
-      cellRow = getRandomIntInclusive(0, MAP_SIZE-1)
-      cellColumn = getRandomIntInclusive(0, MAP_SIZE-1)
-    } while(typeof mapData[`${cellRow}_${cellColumn}`] !== 'undefined');
-    return {cellRow, cellColumn};
+      rowIndex = getRandomIntInclusive(0, MAP_SIZE-1)
+      colIndex = getRandomIntInclusive(0, MAP_SIZE-1)
+    } while(typeof mapData[`${rowIndex}_${colIndex}`] !== 'undefined');
+    return {rowIndex, colIndex};
   }
 
   placeObstaclesOnMap() {
@@ -84,36 +97,71 @@ class Game {
     let emptyPosition;
     do {
       emptyPosition = this.getEmptyMapPosition(mapData);
-      mapData[`${emptyPosition.cellRow}_${emptyPosition.cellColumn}`] = Object.keys(WEAPONS)[getRandomIntInclusive(0, 3)];
+      mapData[`${emptyPosition.rowIndex}_${emptyPosition.colIndex}`] = Object.keys(WEAPONS)[getRandomIntInclusive(0, 3)];
       remainingWeapons -= 1;
     } while(remainingWeapons !== 0);
     return mapData;
   }
 
   isAdjacentPositions(pos1, pos2) {
-    return (Math.abs(pos1.cellRow-pos2.cellRow)+Math.abs(pos1.cellColumn-pos2.cellColumn)) < 2;
+    return (Math.abs(pos1.rowIndex-pos2.rowIndex)+Math.abs(pos1.colIndex-pos2.colIndex)) < 2;
   }
 
-  placeArmyOnMap(mapData) {
+  setArmyPositions(mapData) {
     let yellowArmyPosition = this.getEmptyMapPosition(mapData);
     let blueArmyPosition;
     do {
       blueArmyPosition = this.getEmptyMapPosition(mapData);
     } while(this.isAdjacentPositions(yellowArmyPosition, blueArmyPosition));
-    mapData[`${yellowArmyPosition.cellRow}_${yellowArmyPosition.cellColumn}`] = 'yellowArmy';
-    mapData[`${blueArmyPosition.cellRow}_${blueArmyPosition.cellColumn}`] = 'blueArmy';
+    mapData[`${yellowArmyPosition.rowIndex}_${yellowArmyPosition.colIndex}`] = 'yellowArmy';
+    mapData[`${blueArmyPosition.rowIndex}_${blueArmyPosition.colIndex}`] = 'blueArmy';
     return mapData;
   }
 
+  moveArmy({rowIndex, colIndex}) {
+    console.log(rowIndex, colIndex);
+    const currentArmy = this.state[this.state.turn];
+    delete this.state.mapData[`${currentArmy.rowIndex}_${currentArmy.colIndex}`];
+    this.state[this.state.turn].rowIndex = parseInt(rowIndex);
+    this.state[this.state.turn].colIndex = parseInt(colIndex);
+    this.state.mapData[`${rowIndex}_${colIndex}`] = currentArmy.key;
+    if(this.isAdjacentPositions({rowIndex, colIndex}=this.state.yellowArmy, {rowIndex, colIndex}=this.state.blueArmy)) {
+      this.state.mode = 'battle';
+    }
+
+    this.state.turn = currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy';
+    this.render();
+  }
+
+  battleActionDefend() {
+    console.log('defend');
+    const currentArmy = this.state[this.state.turn];
+    const otherArmy = this.state[currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy'];
+
+    this.state[currentArmy.key].battleAction = 'defend';
+    this.state.turn = otherArmy.key;
+    this.render();
+  }
+
+  battleActionAttack() {
+    console.log('attack');
+    const currentArmy = this.state[this.state.turn];
+    const otherArmy = this.state[currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy'];
+
+    const currentArmyWeoponPower = WEAPONS[currentArmy.weapon].power;
+    this.state[otherArmy.key].life -= (this.state[otherArmy.key].battleAction === 'defend' ? currentArmyWeoponPower/2 : currentArmyWeoponPower);
+
+    this.state[currentArmy.key].battleAction = 'attack';
+    this.state.turn = otherArmy.key;
+    this.render();
+  }
+
   html() {
+    console.log(this.state);
     if(this.state.mapData !== null) {
       return (
         `${this.playerStats.html(this.state, this.state.yellowArmy)}
-        ${
-          this.gameMap.html(
-            this.state.mapData,
-            this.state[this.state.turn])
-        }
+        ${this.gameMap.html(this.state)}
         ${(this.playerStats.html(this.state, this.state.blueArmy))}`
       );
     }

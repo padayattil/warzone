@@ -63,7 +63,6 @@ class GameMap {
   }
 
   html(mapData, currentArmy) {
-    console.log(currentArmy.name);
     return (
       `<div id="GameMap" class="d-flex flex-column">
         ${Array(MAP_SIZE).fill(Array(MAP_SIZE).fill()).map((row, rowIndex) => (

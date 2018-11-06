@@ -16,7 +16,8 @@ class Game {
 
   initTriggers() {
     $(document).on('click', '.army-accessible-cell', (e) => {
-      const mapCellKey = $(e.target).data('key');
+      const [rowIndex, colIndex] = $(e.target).data('key').split('_');
+      this.moveArmy({rowIndex, colIndex});
     });
   }
 
@@ -30,6 +31,7 @@ class Game {
       if (armyPositions.hasOwnProperty(position)) {
         if(armyPositions[position] === 'yellowArmy') {
           yellowArmy = {
+            key: 'yellowArmy',
             name: 'Yellow Army',
             iconClass: 'army army-yellow',
             life: 100,
@@ -40,6 +42,7 @@ class Game {
         }
         if(armyPositions[position] === 'blueArmy') {
           blueArmy = {
+            key: 'blueArmy',
             name: 'Blue Army',
             iconClass: 'army army-blue',
             life: 100,
@@ -60,12 +63,12 @@ class Game {
   }
 
   getEmptyMapPosition(mapData) {
-    let cellRow, cellColumn;
+    let rowIndex, colIndex;
     do {
-      cellRow = getRandomIntInclusive(0, MAP_SIZE-1)
-      cellColumn = getRandomIntInclusive(0, MAP_SIZE-1)
-    } while(typeof mapData[`${cellRow}_${cellColumn}`] !== 'undefined');
-    return {cellRow, cellColumn};
+      rowIndex = getRandomIntInclusive(0, MAP_SIZE-1)
+      colIndex = getRandomIntInclusive(0, MAP_SIZE-1)
+    } while(typeof mapData[`${rowIndex}_${colIndex}`] !== 'undefined');
+    return {rowIndex, colIndex};
   }
 
   placeObstaclesOnMap() {
@@ -84,14 +87,14 @@ class Game {
     let emptyPosition;
     do {
       emptyPosition = this.getEmptyMapPosition(mapData);
-      mapData[`${emptyPosition.cellRow}_${emptyPosition.cellColumn}`] = Object.keys(WEAPONS)[getRandomIntInclusive(0, 3)];
+      mapData[`${emptyPosition.rowIndex}_${emptyPosition.colIndex}`] = Object.keys(WEAPONS)[getRandomIntInclusive(0, 3)];
       remainingWeapons -= 1;
     } while(remainingWeapons !== 0);
     return mapData;
   }
 
   isAdjacentPositions(pos1, pos2) {
-    return (Math.abs(pos1.cellRow-pos2.cellRow)+Math.abs(pos1.cellColumn-pos2.cellColumn)) < 2;
+    return (Math.abs(pos1.rowIndex-pos2.rowIndex)+Math.abs(pos1.colIndex-pos2.colIndex)) < 2;
   }
 
   placeArmyOnMap(mapData) {
@@ -100,12 +103,29 @@ class Game {
     do {
       blueArmyPosition = this.getEmptyMapPosition(mapData);
     } while(this.isAdjacentPositions(yellowArmyPosition, blueArmyPosition));
-    mapData[`${yellowArmyPosition.cellRow}_${yellowArmyPosition.cellColumn}`] = 'yellowArmy';
-    mapData[`${blueArmyPosition.cellRow}_${blueArmyPosition.cellColumn}`] = 'blueArmy';
+    mapData[`${yellowArmyPosition.rowIndex}_${yellowArmyPosition.colIndex}`] = 'yellowArmy';
+    mapData[`${blueArmyPosition.rowIndex}_${blueArmyPosition.colIndex}`] = 'blueArmy';
     return mapData;
   }
 
+  moveArmy({rowIndex, colIndex}) {
+    console.log(rowIndex, colIndex);
+    const currentArmy = this.state[this.state.turn];
+    delete this.state.mapData[`${currentArmy.rowIndex}_${currentArmy.colIndex}`];
+    this.state[this.state.turn].rowIndex = parseInt(rowIndex);
+    this.state[this.state.turn].colIndex = parseInt(colIndex);
+    this.state.mapData[`${rowIndex}_${colIndex}`] = currentArmy.key;
+    this.state.turn = currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy';
+    if(this.isAdjacentPositions({rowIndex, colIndex}=this.state.yellowArmy, {rowIndex, colIndex}=this.state.blueArmy)) {
+      this.state.mode = 'battle';
+    } else {
+      this.state.mode = 'patrol';
+    }
+    this.render();
+  }
+
   html() {
+    console.log(this.state);
     if(this.state.mapData !== null) {
       return (
         `${this.playerStats.html(this.state, this.state.yellowArmy)}

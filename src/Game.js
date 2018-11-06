@@ -19,6 +19,14 @@ class Game {
       const [rowIndex, colIndex] = $(e.target).data('key').split('_');
       this.moveArmy({rowIndex, colIndex});
     });
+
+    $(document).on('click', '.battle-action-defend', (e) => {
+      this.battleActionDefend();
+    });
+
+    $(document).on('click', '.battle-action-attack', (e) => {
+      this.battleActionAttack();
+    });
   }
 
   getInitialState() {
@@ -36,7 +44,7 @@ class Game {
             iconClass: 'army army-yellow',
             life: 100,
             weapon: 'knife',
-            battleStrategy: null,
+            battleAction: null,
             rowIndex: parseInt(armyPosition[0]),
             colIndex: parseInt(armyPosition[1])
           }
@@ -48,7 +56,7 @@ class Game {
             iconClass: 'army army-blue',
             life: 100,
             weapon: 'knife',
-            battleStrategy: null,
+            battleAction: null,
             rowIndex: parseInt(armyPosition[0]),
             colIndex: parseInt(armyPosition[1])
           }
@@ -117,10 +125,34 @@ class Game {
     this.state[this.state.turn].rowIndex = parseInt(rowIndex);
     this.state[this.state.turn].colIndex = parseInt(colIndex);
     this.state.mapData[`${rowIndex}_${colIndex}`] = currentArmy.key;
-    this.state.turn = currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy';
     if(this.isAdjacentPositions({rowIndex, colIndex}=this.state.yellowArmy, {rowIndex, colIndex}=this.state.blueArmy)) {
       this.state.mode = 'battle';
     }
+
+    this.state.turn = currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy';
+    this.render();
+  }
+
+  battleActionDefend() {
+    console.log('defend');
+    const currentArmy = this.state[this.state.turn];
+    const otherArmy = this.state[currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy'];
+
+    this.state[currentArmy.key].battleAction = 'defend';
+    this.state.turn = otherArmy.key;
+    this.render();
+  }
+
+  battleActionAttack() {
+    console.log('attack');
+    const currentArmy = this.state[this.state.turn];
+    const otherArmy = this.state[currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy'];
+
+    const currentArmyWeoponPower = WEAPONS[currentArmy.weapon].power;
+    this.state[otherArmy.key].life -= (this.state[otherArmy.key].battleAction === 'defend' ? currentArmyWeoponPower/2 : currentArmyWeoponPower);
+
+    this.state[currentArmy.key].battleAction = 'attack';
+    this.state.turn = otherArmy.key;
     this.render();
   }
 

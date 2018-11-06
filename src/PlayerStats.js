@@ -3,7 +3,7 @@ import { WEAPONS } from './utils/constants';
 class PlayerStats {
   html(state, army) {
     return (
-      `<div class="PlayerStats p-3 d-flex flex-column align-items-center ${state[state.turn].name === army.name ? 'active' : 'inactive'}">
+      `<div class="PlayerStats p-3 d-flex flex-column align-items-center ${state[state.turn].name === army.name ? 'aura-white' : ''}">
         <div class="text-center">
           <div class="d-inline-block ${army.iconClass}"></div>
           <p class="text-center">${army.name}</p>
@@ -16,10 +16,10 @@ class PlayerStats {
           <div class="weapon-gauge-icon ${army.weapon}"></div>
           <p class="px-2">${WEAPONS[army.weapon].power}</p>
         </div>
-        ${state[state.turn].name === army.name ?
+        ${state[state.turn].name === army.name && state.mode === 'battle' ?
           `<div class="battle-action-container">
-            <a href="#" class="my-1 menu-btn btn btn-danger px-5">Attack</a>
-            <a href="#" class="my-1 menu-btn btn btn-secondary px-5">Defend</a>
+            <button class="my-1 menu-btn btn btn-danger px-5">Attack</button>
+            <button class="my-1 menu-btn btn btn-secondary px-5 ${army.battleStrategy === 'defend' ? 'aura-white' : ''}">Defend</button>
           </div>` : ''
         }
       </div>`

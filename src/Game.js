@@ -36,6 +36,7 @@ class Game {
             iconClass: 'army army-yellow',
             life: 100,
             weapon: 'knife',
+            battleStrategy: null,
             rowIndex: parseInt(armyPosition[0]),
             colIndex: parseInt(armyPosition[1])
           }
@@ -47,6 +48,7 @@ class Game {
             iconClass: 'army army-blue',
             life: 100,
             weapon: 'knife',
+            battleStrategy: null,
             rowIndex: parseInt(armyPosition[0]),
             colIndex: parseInt(armyPosition[1])
           }
@@ -118,8 +120,6 @@ class Game {
     this.state.turn = currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy';
     if(this.isAdjacentPositions({rowIndex, colIndex}=this.state.yellowArmy, {rowIndex, colIndex}=this.state.blueArmy)) {
       this.state.mode = 'battle';
-    } else {
-      this.state.mode = 'patrol';
     }
     this.render();
   }

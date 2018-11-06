@@ -111,7 +111,11 @@ code {
   width: 8em;
 }
 
-.PlayerStats.active {
+.btn:focus {
+  box-shadow: none;
+}
+
+.aura-white, .aura-white:focus {
   box-shadow: 0 0 5px 2px white;
 }
 
@@ -198,12 +202,20 @@ code {
   box-shadow: 0 0 5px 0.5px red inset;
 }
 
-.army-accessible-cell {
-  box-shadow: 0 0 5px 1px #32CD32 inset;
+.army-accessible-cell-yellowArmy {
+  box-shadow: 0 0 5px 1px #E5BA11 inset;
 }
 
-.army-accessible-cell:hover {
-  box-shadow: 0 0 5px 4px #32CD32 inset;
+.army-accessible-cell-yellowArmy:hover {
+  box-shadow: 0 0 5px 4px #E5BA11 inset;
+}
+
+.army-accessible-cell-blueArmy {
+  box-shadow: 0 0 5px 1px #00ABFF inset;
+}
+
+.army-accessible-cell-blueArmy:hover {
+  box-shadow: 0 0 5px 4px #00ABFF inset;
 }
 
 .weapon-gauge {

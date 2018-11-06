@@ -60,7 +60,7 @@ class GameMap {
         }
       }
     }
-    return  'army-accessible-cell';
+    return  `army-accessible-cell army-accessible-cell-${currentArmy.key}`;
   }
 
   html(state) {

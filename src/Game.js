@@ -24,7 +24,7 @@ class Game {
   getInitialState() {
     const obstaclePositions = this.placeObstaclesOnMap();
     const weaponPositions = this.placeWeaponsOnMap({...obstaclePositions});
-    const armyPositions = this.placeArmyOnMap({...obstaclePositions, ...weaponPositions});
+    const armyPositions = this.setArmyPositions({...obstaclePositions, ...weaponPositions});
     let yellowArmy, blueArmy, armyPosition;
     for(const position in armyPositions) {
       armyPosition = position.split('_')
@@ -55,7 +55,7 @@ class Game {
     }
     return ({
       mode: 'patrol',
-      mapData: {...obstaclePositions, ...weaponPositions, ...armyPositions},
+      mapData: {...obstaclePositions, ...weaponPositions},
       turn: ['yellowArmy', 'blueArmy'][getRandomIntInclusive(0,1)],
       yellowArmy,
       blueArmy
@@ -97,7 +97,7 @@ class Game {
     return (Math.abs(pos1.rowIndex-pos2.rowIndex)+Math.abs(pos1.colIndex-pos2.colIndex)) < 2;
   }
 
-  placeArmyOnMap(mapData) {
+  setArmyPositions(mapData) {
     let yellowArmyPosition = this.getEmptyMapPosition(mapData);
     let blueArmyPosition;
     do {
@@ -129,11 +129,7 @@ class Game {
     if(this.state.mapData !== null) {
       return (
         `${this.playerStats.html(this.state, this.state.yellowArmy)}
-        ${
-          this.gameMap.html(
-            this.state.mapData,
-            this.state[this.state.turn])
-        }
+        ${this.gameMap.html(this.state)}
         ${(this.playerStats.html(this.state, this.state.blueArmy))}`
       );
     }

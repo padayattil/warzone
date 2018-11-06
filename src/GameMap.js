@@ -2,25 +2,26 @@ import { MAP_SIZE,MAX_WALK_DISTANCE,WEAPONS } from './utils/constants';
 
 class GameMap {
 
-  getCellItemClasses(mapData, rowIndex, colIndex) {
-    if(mapData[`${rowIndex}_${colIndex}`] === 'rocks')
+  getCellItemClasses(state, rowIndex, colIndex) {
+    const currentArmy = state[state.turn];
+    if(state.yellowArmy.rowIndex === rowIndex && state.yellowArmy.colIndex === colIndex)
+      return state.yellowArmy.iconClass;
+    if(state.blueArmy.rowIndex === rowIndex && state.blueArmy.colIndex === colIndex)
+      return state.blueArmy.iconClass;
+    if(state.mapData[`${rowIndex}_${colIndex}`] === 'rocks')
       return 'rocks';
-    if(mapData[`${rowIndex}_${colIndex}`] === 'trees')
+    if(state.mapData[`${rowIndex}_${colIndex}`] === 'trees')
       return 'trees';
-    if(mapData[`${rowIndex}_${colIndex}`] === 'czech-hedgehog')
+    if(state.mapData[`${rowIndex}_${colIndex}`] === 'czech-hedgehog')
       return 'czech-hedgehog';
-    if(mapData[`${rowIndex}_${colIndex}`] === 'knife')
+    if(state.mapData[`${rowIndex}_${colIndex}`] === 'knife')
       return 'knife';
-    if(mapData[`${rowIndex}_${colIndex}`] === 'gun')
+    if(state.mapData[`${rowIndex}_${colIndex}`] === 'gun')
       return 'gun';
-    if(mapData[`${rowIndex}_${colIndex}`] === 'grenade')
+    if(state.mapData[`${rowIndex}_${colIndex}`] === 'grenade')
       return 'grenade';
-    if(mapData[`${rowIndex}_${colIndex}`] === 'tank')
+    if(state.mapData[`${rowIndex}_${colIndex}`] === 'tank')
       return 'tank';
-    if(mapData[`${rowIndex}_${colIndex}`] === 'yellowArmy')
-      return 'army-yellow';
-    if(mapData[`${rowIndex}_${colIndex}`] === 'blueArmy')
-      return 'army-blue';
     return '';
   }
 
@@ -62,14 +63,14 @@ class GameMap {
     return  'army-accessible-cell';
   }
 
-  html(mapData, currentArmy) {
+  html(state) {
     return (
       `<div id="GameMap" class="d-flex flex-column">
         ${Array(MAP_SIZE).fill(Array(MAP_SIZE).fill()).map((row, rowIndex) => (
           `<div data-key="${rowIndex}" class="map-row d-flex">
             ${row.map((col, colIndex) => (
-              `<div class="map-cell ${this.getArmyAccessibility(mapData, currentArmy, rowIndex, colIndex)}">
-                <div data-key="${rowIndex}_${colIndex}" class="map-cell-item ${this.getCellItemClasses(mapData, rowIndex, colIndex)}"></div>
+              `<div class="map-cell ${this.getArmyAccessibility(state.mapData, state[state.turn], rowIndex, colIndex)}">
+                <div data-key="${rowIndex}_${colIndex}" class="map-cell-item ${this.getCellItemClasses(state, rowIndex, colIndex)}"></div>
               </div>`
             )).join('')}
           </div>`

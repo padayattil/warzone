@@ -27,6 +27,15 @@ class Game {
     $(document).on('click', '.battle-action-attack', (e) => {
       this.battleActionAttack();
     });
+
+    $(document).on('click', '.game-over-go-home', (e) => {
+      window.location.href = '/';
+    });
+
+    $(document).on('click', '.game-over-play-again', (e) => {
+      this.state = this.getInitialState();
+      this.render();
+    });
   }
 
   getInitialState() {
@@ -150,10 +159,18 @@ class Game {
 
     const currentArmyWeoponPower = WEAPONS[currentArmy.weapon].power;
     this.state[otherArmy.key].life -= (this.state[otherArmy.key].battleAction === 'defend' ? currentArmyWeoponPower/2 : currentArmyWeoponPower);
+    if(this.state[otherArmy.key].life < 0)
+      this.state[otherArmy.key].life = 0;
 
     this.state[currentArmy.key].battleAction = 'attack';
     this.state.turn = otherArmy.key;
     this.render();
+
+    if(otherArmy.life === 0){
+      $("#gameOverModalBody").html(`${currentArmy.name} won the battle.`);
+      console.log('Game Over!');
+      $('#gameOverModal').modal()
+    }
   }
 
   html() {

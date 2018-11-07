@@ -20,7 +20,7 @@ class PlayerStats {
         ${state.mode === 'battle'
           ?
             `<div class="battle-action-container">
-              <button class="my-1 menu-btn btn btn-secondary px-5 ${army.battleAction === 'defend' ? 'aura-white disabled">Defending</button>' : 'battle-action-defend">Defend</button>'}
+              <button class="${currentArmy.key !== army.key ? 'disabled' : 'battle-action'} my-1 menu-btn btn btn-secondary px-5 ${army.battleAction === 'defend' ? 'aura-white' : ''} battle-action-defend">Defend</button>
               ${currentArmy.name === army.name ? `<button class="battle-action-attack my-1 menu-btn btn btn-danger px-5">Attack</button>`: ''}
             </div>`
           : ''

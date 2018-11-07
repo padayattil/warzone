@@ -237,3 +237,20 @@ code {
 .life-icon {
   color: red;
 }
+
+#gameOverModal .modal-header {
+  border-bottom: 0;
+}
+
+#gameOverModal .modal-footer {
+  border-top: 0;
+}
+
+#gameOverModal .modal-content {
+  padding: 1em;
+  background-color: #282C34;
+}
+
+#gameOverModal .modal-body {
+  border: 0;
+}

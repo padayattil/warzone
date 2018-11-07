@@ -11,6 +11,24 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+    <!-- Game Over Modal -->
+    <div class="modal fade" id="gameOverModal" tabindex="-1" role="dialog" aria-labelledby="gameOverModal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center text-white">
+            <h2 class="modal-title text-center" id="gameOverModalTitle">Game Over</h2>
+          </div>
+          <div class="modal-body justify-content-center text-white">
+            <h5 id="gameOverModalBody" class="text-center"></h5>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="game-over-go-home btn btn-warning" data-dismiss="modal">Go Home</button>
+            <button type="button" class="game-over-play-again btn btn-warning" data-dismiss="modal">Play Again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Game Over Modal End -->
 
     <div class="App">
       <div id="GamePage"  class="d-flex flex-column v-100">

@@ -4,7 +4,7 @@ export const MAX_WALK_DISTANCE = 3;
 export const WEAPONS = {
   'knife': {
     name: 'Knife',
-    power: 100
+    power: 10
   },
   'gun': {
     name: 'Gun',

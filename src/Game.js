@@ -20,12 +20,21 @@ class Game {
       this.moveArmy({rowIndex, colIndex});
     });
 
-    $(document).on('click', '.battle-action-defend', (e) => {
+    $(document).on('click', '.battle-action.battle-action-defend', (e) => {
       this.battleActionDefend();
     });
 
     $(document).on('click', '.battle-action-attack', (e) => {
       this.battleActionAttack();
+    });
+
+    $(document).on('click', '.game-over-go-home', (e) => {
+      window.location.href = '/';
+    });
+
+    $(document).on('click', '.game-over-play-again', (e) => {
+      this.state = this.getInitialState();
+      this.render();
     });
   }
 
@@ -119,12 +128,44 @@ class Game {
   }
 
   moveArmy({rowIndex, colIndex}) {
-    console.log(rowIndex, colIndex);
+    [rowIndex, colIndex] = [parseInt(rowIndex), parseInt(colIndex)];
     const currentArmy = this.state[this.state.turn];
-    delete this.state.mapData[`${currentArmy.rowIndex}_${currentArmy.colIndex}`];
+
+    // compute distance
+    let diff;
+    if(currentArmy.rowIndex === rowIndex)
+      diff = currentArmy.colIndex - colIndex
+    else
+      diff = currentArmy.rowIndex - rowIndex
+
+    // check path for weapons, row wise
+    let walk_step = diff === Math.abs(diff) ? -1 : 1;
+    let currentWeapon;
+    if(currentArmy.rowIndex === rowIndex) {
+      for(let i=currentArmy.colIndex+walk_step; i !== (colIndex+walk_step); i += walk_step) {
+        if(typeof this.state.mapData[`${rowIndex}_${i}`] !== 'undefined') {
+          currentWeapon = this.state[currentArmy.key].weapon;
+          this.state[currentArmy.key].weapon = this.state.mapData[`${rowIndex}_${i}`];
+          this.state.mapData[`${rowIndex}_${i}`] = currentWeapon;
+        }
+      }
+    }
+    // check path for weapons, column wise
+    if(currentArmy.colIndex === colIndex) {
+      for(let i=currentArmy.rowIndex+walk_step; i !== (rowIndex+walk_step); i += walk_step) {
+        if(typeof this.state.mapData[`${i}_${colIndex}`] !== 'undefined') {
+          currentWeapon = this.state[currentArmy.key].weapon;
+          this.state[currentArmy.key].weapon = this.state.mapData[`${i}_${colIndex}`];
+          this.state.mapData[`${i}_${colIndex}`] = currentWeapon;
+        }
+      }
+    }
+
+    // delete this.state.mapData[`${currentArmy.rowIndex}_${currentArmy.colIndex}`];
     this.state[this.state.turn].rowIndex = parseInt(rowIndex);
     this.state[this.state.turn].colIndex = parseInt(colIndex);
-    this.state.mapData[`${rowIndex}_${colIndex}`] = currentArmy.key;
+    // this.state.mapData[`${rowIndex}_${colIndex}`] = currentArmy.key;
+
     if(this.isAdjacentPositions({rowIndex, colIndex}=this.state.yellowArmy, {rowIndex, colIndex}=this.state.blueArmy)) {
       this.state.mode = 'battle';
     }
@@ -134,7 +175,6 @@ class Game {
   }
 
   battleActionDefend() {
-    console.log('defend');
     const currentArmy = this.state[this.state.turn];
     const otherArmy = this.state[currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy'];
 
@@ -144,20 +184,25 @@ class Game {
   }
 
   battleActionAttack() {
-    console.log('attack');
     const currentArmy = this.state[this.state.turn];
     const otherArmy = this.state[currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy'];
 
     const currentArmyWeoponPower = WEAPONS[currentArmy.weapon].power;
     this.state[otherArmy.key].life -= (this.state[otherArmy.key].battleAction === 'defend' ? currentArmyWeoponPower/2 : currentArmyWeoponPower);
+    if(this.state[otherArmy.key].life < 0)
+      this.state[otherArmy.key].life = 0;
 
     this.state[currentArmy.key].battleAction = 'attack';
     this.state.turn = otherArmy.key;
     this.render();
+
+    if(otherArmy.life === 0){
+      $("#gameOverModalBody").html(`${currentArmy.name} won the battle.`);
+      $('#gameOverModal').modal()
+    }
   }
 
   html() {
-    console.log(this.state);
     if(this.state.mapData !== null) {
       return (
         `${this.playerStats.html(this.state, this.state.yellowArmy)}

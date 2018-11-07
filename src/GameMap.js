@@ -25,7 +25,10 @@ class GameMap {
     return '';
   }
 
-  getArmyAccessibility(mapData, currentArmy, rowIndex, colIndex) {
+  getArmyAccessibility(mapData, currentArmy, otherArmy, rowIndex, colIndex) {
+    if(otherArmy.rowIndex === rowIndex && otherArmy.colIndex === colIndex)
+      return 'army-inaccessible-cell';
+
     // compute distance
     let diff;
     if(currentArmy.rowIndex === rowIndex)
@@ -38,7 +41,7 @@ class GameMap {
     // check if within range. return 'inaccessible' if occupied
     if(Math.abs(diff) === 0)
       return 'current-army-cell';
-    if (['rocks', 'trees', 'czech-hedgehog', 'yellowArmy', 'blueArmy'].includes(mapData[`${rowIndex}_${colIndex}`]))
+    if (['rocks', 'trees', 'czech-hedgehog'].includes(mapData[`${rowIndex}_${colIndex}`]))
       return 'army-inaccessible-cell';
     if(Math.abs(diff) > MAX_WALK_DISTANCE)
       return 'army-inaccessible-cell';
@@ -47,29 +50,35 @@ class GameMap {
     let walk_step = diff === Math.abs(diff) ? -1 : 1;
     if(currentArmy.rowIndex === rowIndex) {
       for(let i=currentArmy.colIndex+walk_step; i !== colIndex; i += walk_step) {
-        if(['rocks', 'trees', 'czech-hedgehog', 'yellowArmy', 'blueArmy'].includes(mapData[`${rowIndex}_${i}`])) {
+        if(['rocks', 'trees', 'czech-hedgehog'].includes(mapData[`${rowIndex}_${i}`])) {
           return 'army-inaccessible-cell';
         }
+        if (otherArmy.rowIndex === rowIndex && otherArmy.colIndex === i)
+          return 'army-inaccessible-cell';
       }
     }
     // check line of sight within column
     if(currentArmy.colIndex === colIndex) {
       for(let i=currentArmy.rowIndex+walk_step; i !== rowIndex; i += walk_step) {
-        if(['rocks', 'trees', 'czech-hedgehog', 'yellowArmy', 'blueArmy'].includes(mapData[`${i}_${colIndex}`])) {
+        if(['rocks', 'trees', 'czech-hedgehog'].includes(mapData[`${i}_${colIndex}`])) {
           return 'army-inaccessible-cell';
         }
+        if (otherArmy.rowIndex === i && otherArmy.colIndex === colIndex)
+          return 'army-inaccessible-cell';
       }
     }
     return  `army-accessible-cell army-accessible-cell-${currentArmy.key}`;
   }
 
   html(state) {
+    const currentArmy = state[state.turn];
+    const otherArmy = state[currentArmy.key === 'yellowArmy' ? 'blueArmy' : 'yellowArmy'];
     return (
       `<div id="GameMap" class="d-flex flex-column">
         ${Array(MAP_SIZE).fill(Array(MAP_SIZE).fill()).map((row, rowIndex) => (
           `<div data-key="${rowIndex}" class="map-row d-flex">
             ${row.map((col, colIndex) => (
-              `<div class="map-cell ${this.getArmyAccessibility(state.mapData, state[state.turn], rowIndex, colIndex)}">
+              `<div class="map-cell ${this.getArmyAccessibility(state.mapData, currentArmy, otherArmy, rowIndex, colIndex)}">
                 <div data-key="${rowIndex}_${colIndex}" class="map-cell-item ${this.getCellItemClasses(state, rowIndex, colIndex)}"></div>
               </div>`
             )).join('')}
